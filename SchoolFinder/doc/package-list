@@ -1,0 +1,9 @@
+org.angiedev.schoolfinder.dao
+org.angiedev.schoolfinder.dao.impl
+org.angiedev.schoolfinder.loader
+org.angiedev.schoolfinder.loader.json
+org.angiedev.schoolfinder.model
+org.angiedev.schoolfinder.service
+org.angiedev.schoolfinder.service.impl
+org.angiedev.schoolfinder.util
+org.angiedev.schoolfinder.web.controller
