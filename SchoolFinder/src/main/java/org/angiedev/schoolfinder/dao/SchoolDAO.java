@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.angiedev.schoolfinder.model.School;
 
+
 /**
  * SchoolDAO is an interface which defines the data access operations 
  * to find, create and update schools.
@@ -71,4 +72,18 @@ public interface SchoolDAO {
 	 * 						geo location.
 	 */
 	public List<School> getSchoolsNearGeoLocation(double latitude, double longitude, int searchRadius);
+	
+	/**
+	 * Retrieves the list of schools that are located within a specified radius of a
+	 * the passed in latitude and longitude geo location and whose name contains the passed
+	 * in search string.
+	 * @param latitude		latitude of the position to search near. 
+	 * @param longitude		longitude of the position to search near.
+	 * @param searchRadius	the search radius in miles to conduct the search.
+	 * @param searchString	search string to find at start of the school's name
+	 * @return				the list of schools within the specified radius of the passed in 
+	 * 						geo location.
+	 */
+	public List<School> getSchoolsNearGeoLocation(double latitude, double longitude, int searchRadius, 
+			String searchString);
 }

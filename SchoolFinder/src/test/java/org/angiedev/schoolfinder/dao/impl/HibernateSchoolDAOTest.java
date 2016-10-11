@@ -349,6 +349,22 @@ public class HibernateSchoolDAOTest {
 		assertTrue("Was school 2 returned as expected?", schools.contains(school2));
 		assertFalse("Was school 3 not returned as expected?", schools.contains(school3));
 		assertFalse("Was school 4 not returned as expected?", schools.contains(school4));
+		
+		// Now limit it with search String 
+		schools = schoolDAO.getSchoolsNearGeoLocation(37.21873,-121.886661, 3, "SIMONDS");
+		
+		assertTrue("Was school 1 returned as expected?", schools.contains( school1));
+		assertFalse("Was school 2 not returned as expected?", schools.contains(school2));
+		assertFalse("Was school 3 not returned as expected?", schools.contains(school3));
+		assertFalse("Was school 4 not returned as expected?", schools.contains(school4));
+		
+		schools =  schoolDAO.getSchoolsNearGeoLocation(37.21873,-121.886661, 3, "will");
+		
+		assertFalse("Was school 1 not returned as expected?", schools.contains( school1));
+		assertTrue("Was school 2 returned as expected?", schools.contains(school2));
+		assertFalse("Was school 3 not returned as expected?", schools.contains(school3));
+		assertFalse("Was school 4 not returned as expected?", schools.contains(school4));
+		
 	}
 	
 }

@@ -103,12 +103,35 @@ public class HibernateSchoolDAO implements SchoolDAO {
 		         " and (:longitude+:searchRadius/cos(radians(:latitude))*69)" +
 		         " and latitude between (:latitude-(:searchRadius/69))" +
 		         " and (:latitude+(:searchRadius/69))"+
-		         " having distance < :searchRadius order by distance limit 100"; 
+		         " having distance < :searchRadius order by name limit 100"; 
 		
 		return currentSession().createNativeQuery(queryStr, School.class).
 			setParameter("longitude", longitude, DoubleType.INSTANCE).
 			setParameter("latitude", latitude, DoubleType.INSTANCE).
 			setParameter("searchRadius", searchRadius, IntegerType.INSTANCE).getResultList();
 		
+	}
+
+	@Override
+	public List<School> getSchoolsNearGeoLocation(double latitude, double longitude, int searchRadius,
+			String searchString) {
+		String queryStr = "select school_id, nces_id, name, district_id, street_address, city, state," +
+				 " zip, status, low_grade, high_grade, longitude, latitude, 3956 * 2 * " +
+		         " ASIN(SQRT( POWER(SIN((:latitude - latitude)*pi()/180/2),2)" +
+		         " +COS(:latitude*pi()/180 )*COS(latitude*pi()/180)" + 
+		         " *POWER(SIN((:longitude-longitude)*pi()/180/2),2)))" +
+		         " as distance from School where" +
+		         " name like :searchString and " +
+		         " longitude between (:longitude-:searchRadius/cos(radians(:latitude))*69)" + 
+		         " and (:longitude+:searchRadius/cos(radians(:latitude))*69)" +
+		         " and latitude between (:latitude-(:searchRadius/69))" +
+		         " and (:latitude+(:searchRadius/69))"+
+		         " having distance < :searchRadius order by name limit 100"; 
+		
+		return currentSession().createNativeQuery(queryStr, School.class).
+				setParameter("longitude", longitude, DoubleType.INSTANCE).
+				setParameter("latitude", latitude, DoubleType.INSTANCE).
+				setParameter("searchRadius", searchRadius, IntegerType.INSTANCE).
+				setParameter("searchString", searchString + "%", StringType.INSTANCE).getResultList();
 	}
 }
