@@ -91,7 +91,8 @@ public class HibernateSchoolDAO implements SchoolDAO {
 	}
 
 	@Override
-	public List<School> getSchoolsNearGeoLocation(double latitude, double longitude, int searchRadius) {
+	public List<School> getSchoolsNearGeoLocation(double latitude, double longitude, int searchRadius,
+			int maxNumResults) {
 		
 		String queryStr = "select school_id, nces_id, name, district_id, street_address, city, state," +
 				 " zip, status, low_grade, high_grade, longitude, latitude, 3956 * 2 * " +
@@ -103,7 +104,7 @@ public class HibernateSchoolDAO implements SchoolDAO {
 		         " and (:longitude+:searchRadius/cos(radians(:latitude))*69)" +
 		         " and latitude between (:latitude-(:searchRadius/69))" +
 		         " and (:latitude+(:searchRadius/69))"+
-		         " having distance < :searchRadius order by name limit 100"; 
+		         " having distance < :searchRadius order by name limit " + maxNumResults; 
 		
 		return currentSession().createNativeQuery(queryStr, School.class).
 			setParameter("longitude", longitude, DoubleType.INSTANCE).
@@ -114,7 +115,7 @@ public class HibernateSchoolDAO implements SchoolDAO {
 
 	@Override
 	public List<School> getSchoolsNearGeoLocation(double latitude, double longitude, int searchRadius,
-			String searchString) {
+			String searchString, int maxNumResults) {
 		String queryStr = "select school_id, nces_id, name, district_id, street_address, city, state," +
 				 " zip, status, low_grade, high_grade, longitude, latitude, 3956 * 2 * " +
 		         " ASIN(SQRT( POWER(SIN((:latitude - latitude)*pi()/180/2),2)" +
@@ -126,7 +127,7 @@ public class HibernateSchoolDAO implements SchoolDAO {
 		         " and (:longitude+:searchRadius/cos(radians(:latitude))*69)" +
 		         " and latitude between (:latitude-(:searchRadius/69))" +
 		         " and (:latitude+(:searchRadius/69))"+
-		         " having distance < :searchRadius order by name limit 100"; 
+		         " having distance < :searchRadius order by name limit " + maxNumResults; 
 		
 		return currentSession().createNativeQuery(queryStr, School.class).
 				setParameter("longitude", longitude, DoubleType.INSTANCE).

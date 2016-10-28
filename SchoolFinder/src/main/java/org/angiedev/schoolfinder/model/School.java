@@ -29,7 +29,7 @@ public class School {
 	private long schoolId; 
 	private String ncesId;
 	private String name;
-	private String streetAddr;
+	private String streetAddress;
 	private String city;
 	private String state;
 	private String zip;
@@ -44,7 +44,7 @@ public class School {
 	 * Creates an instance of a school.
 	 * @param ncesId		unique id for school assigned by the National Center for Education Statistics (NCES).
 	 * @param name			name of school.
-	 * @param streetAddr	street address of school.
+	 * @param streetAddress	street address of school.
 	 * @param city			the city the school is located in.
 	 * @param state			the state the school is located in.
 	 * @param zip			the zip code the school is located in.
@@ -53,11 +53,11 @@ public class School {
 	 * @param highGrade 	the highest grade being taught at the school.
 	 * @param district		the district the school belongs to.
 	 */
-	public School(String ncesId, String name, String streetAddr, String city, String state, String zip,
+	public School(String ncesId, String name, String streetAddress, String city, String state, String zip,
 			int status, String lowGrade, String highGrade, District district) {
 		this.ncesId = ncesId;
 		this.name = name;
-		this.streetAddr = streetAddr;
+		this.streetAddress = streetAddress;
 		this.city = city;
 		this.state = state;
 		this.zip = zip;
@@ -113,12 +113,12 @@ public class School {
 	}
 	
 	@Column(name="street_address")
-	public String getStreetAddr() {
-		return streetAddr;
+	public String getStreetAddress() {
+		return streetAddress;
 	}
 
-	public void setStreetAddr(String streetAddr) {
-		this.streetAddr = streetAddr;
+	public void setStreetAddress(String streetAddress) {
+		this.streetAddress = streetAddress;
 	}
 
 	@Column(name="city")
@@ -210,7 +210,7 @@ public class School {
 		result = prime * result + (int) (schoolId ^ (schoolId >>> 32));
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
 		result = prime * result + status;
-		result = prime * result + ((streetAddr == null) ? 0 : streetAddr.hashCode());
+		result = prime * result + ((streetAddress == null) ? 0 : streetAddress.hashCode());
 		result = prime * result + ((zip == null) ? 0 : zip.hashCode());
 		return result;
 	}
@@ -273,10 +273,10 @@ public class School {
 			return false;
 		if (status != other.status)
 			return false;
-		if (streetAddr == null) {
-			if (other.streetAddr != null)
+		if (streetAddress == null) {
+			if (other.streetAddress != null)
 				return false;
-		} else if (!streetAddr.equals(other.streetAddr))
+		} else if (!streetAddress.equals(other.streetAddress))
 			return false;
 		if (zip == null) {
 			if (other.zip != null)
@@ -288,7 +288,7 @@ public class School {
 
 	@Override
 	public String toString() {
-		return "School [schoolId=" + schoolId + ", ncesId=" + ncesId + ", name=" + name + ", streetAddr=" + streetAddr
+		return "School [schoolId=" + schoolId + ", ncesId=" + ncesId + ", name=" + name + ", streetAddr=" + streetAddress
 				+ ", city=" + city + ", state=" + state + ", zip=" + zip + ", status=" + status + ", lowGrade="
 				+ lowGrade + ", highGrade=" + highGrade + ", longitude=" + longitude + ", latitude=" + latitude
 				+ ", district=" + district + "]";

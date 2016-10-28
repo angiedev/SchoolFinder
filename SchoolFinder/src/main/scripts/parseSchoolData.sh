@@ -20,7 +20,7 @@
 #               7 = School is scheduled to be operational within 2 years.
 #               8 = School was closed on a previous year’s file but has reopened.)
 # $25 - Lowest Grade offered (UG = Ungraded, PK = Prekindergarten, KG = Kindergarten, 01–12 = 1st through 12th
-#       grade, N = School had no students reported)
+#       grade, N = School had no students reported, M = Missing)
 # $26 - Highest Grade offered
 #
 # Usage: parseSchoolData.sh <inputFilename> <outputFilename>

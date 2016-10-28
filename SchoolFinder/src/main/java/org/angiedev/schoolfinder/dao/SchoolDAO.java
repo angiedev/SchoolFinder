@@ -68,10 +68,12 @@ public interface SchoolDAO {
 	 * @param latitude		latitude of the position to search near. 
 	 * @param longitude		longitude of the position to search near.
 	 * @param searchRadius	the search radius in miles to conduct the search.
+	 * @param maxNumResults	maximum number of schools to return
 	 * @return				the list of schools within the specified radius of the passed in 
 	 * 						geo location.
 	 */
-	public List<School> getSchoolsNearGeoLocation(double latitude, double longitude, int searchRadius);
+	public List<School> getSchoolsNearGeoLocation(double latitude, double longitude, int searchRadius,
+			int maxNumResults);
 	
 	/**
 	 * Retrieves the list of schools that are located within a specified radius of a
@@ -81,9 +83,10 @@ public interface SchoolDAO {
 	 * @param longitude		longitude of the position to search near.
 	 * @param searchRadius	the search radius in miles to conduct the search.
 	 * @param searchString	search string to find at start of the school's name
+	 * @param numResults	maximum number of schools to return
 	 * @return				the list of schools within the specified radius of the passed in 
 	 * 						geo location.
 	 */
 	public List<School> getSchoolsNearGeoLocation(double latitude, double longitude, int searchRadius, 
-			String searchString);
+			String searchString, int maxNumResults);
 }

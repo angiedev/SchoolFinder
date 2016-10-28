@@ -18,10 +18,12 @@ public interface SchoolFinderService {
 	 * @param latitude		latitude of location to search from 
 	 * @param longitude		longitude of location to search from
 	 * @param searchRadius	search radius in miles to search within
+	 * @param maxNumResults	maximum number of schools to return
 	 * @return				list of schools located within search radius of search location
 	 * 
 	 */
-	public List<School> getSchools(double latitude, double longitude, int searchRadius);
+	public List<School> getSchools(double latitude, double longitude, int searchRadius,
+			int maxNumResults);
 	
 	/**
 	 * Retrieves the list of schools that are near the specified location (in
@@ -31,8 +33,19 @@ public interface SchoolFinderService {
 	 * @param longitude		longitude of location to search from
 	 * @param searchRadius	search radius in miles to search within
 	 * @param searchString	search string to find at start of the school's name
+	 * @param maxNumResults	maximum number of schools to return
 	 * @return				list of schools located within search radius of search location
 	 * 
 	 */
-	public List<School> getSchools(double latitude, double longitude, int searchRadius, String searchString);
+	public List<School> getSchools(double latitude, double longitude, int searchRadius,
+			String searchString, int maxNumResults);
+	
+	/**
+	 * Retrieves the school identified by the passed in NCES id
+	 * @param ncesId	unique NCES id identifying the school 
+	 *                  (Id assigned by the National Center for Education Statistics)
+	 * @return			school with the passed in NCES Id
+	 * 
+	 */
+	public School getSchoolByNcesId(String ncesId);
 }

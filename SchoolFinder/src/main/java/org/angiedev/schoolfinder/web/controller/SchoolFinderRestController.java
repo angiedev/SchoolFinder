@@ -5,6 +5,7 @@ import java.util.List;
 import org.angiedev.schoolfinder.model.School;
 import org.angiedev.schoolfinder.service.SchoolFinderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,29 +27,41 @@ public class SchoolFinderRestController {
 	private SchoolFinderService finderService;
 	
 	/**
-	 * Returns a JSON representation of the list of schools within the 
-	 * passed in searchRadius of the given location identified by latitude
-	 * and longitude and optionally matching a passed in search string within
-	 * the school's name 
+	 * Returns the list of schools within the passed in searchRadius of the given 
+	 * location identified by latitude and longitude and optionally matching a passed
+	 * in search string within the school's name 
 	 * @param searchString	search string to find within the school's name
 	 * @param latitude		latitude of location we are searching from.
 	 * @param longitude		longitude of location we are searching from.
 	 * @param searchRadius	search radius in miles in which we are searching
 	 *                      (must be a string with value "BY_DISTANCE" or "BY_NAME")
+	 * @param maxNumResults	maximum number of schools to return
 	 * @return				list of schools within search radius
 	 */
-	@RequestMapping(method=RequestMethod.GET, produces={"application/json"})
-	public List<School> getSchools(
+	
+	@RequestMapping(value="search", method=RequestMethod.GET)
+	public List<School> searchForSchools(
 			@RequestParam(value="searchString", required=false) String searchString,
 			@RequestParam("lat") double latitude,
 			@RequestParam("long") double longitude, 
-			@RequestParam("searchRadius") int searchRadius) {
+			@RequestParam("searchRadius") int searchRadius,
+			@RequestParam("maxNumResults") int maxNumResults) {
 		
 		if (searchString == null) {
-			return finderService.getSchools(latitude, longitude, searchRadius);
+			return finderService.getSchools(latitude, longitude, searchRadius, maxNumResults);
 		} else {
-			return finderService.getSchools(latitude, longitude, searchRadius, searchString);
+			return finderService.getSchools(latitude, longitude, searchRadius, searchString, maxNumResults);
 		}
+	}
+	
+	/**
+	 * Returns a JSON representation of a school identified by the passed in ncesId
+	 * @param ncesId	NCES Id identifying school being retrieved
+	 * @return 			school 
+	 */
+	@RequestMapping(value="/{ncesId}", method=RequestMethod.GET)
+	public School getSchoolByNcesId(@PathVariable String ncesId) {
+		return finderService.getSchoolByNcesId(ncesId);
 	}
 	
 	public SchoolFinderService getFinderService() {

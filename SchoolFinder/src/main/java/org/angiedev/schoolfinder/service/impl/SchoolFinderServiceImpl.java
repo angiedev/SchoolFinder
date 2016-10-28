@@ -22,25 +22,45 @@ public class SchoolFinderServiceImpl implements SchoolFinderService {
 	SchoolDAO schoolDAO;
 	
 	@Override
-	public List<School> getSchools(double latitude, double longitude, int searchRadius) {
-		List<School> schools = schoolDAO.getSchoolsNearGeoLocation(latitude, longitude, searchRadius);
-		captializeSchoolNames(schools);
+	public List<School> getSchools(double latitude, double longitude, int searchRadius, int maxNumResults) {
+		List<School> schools = schoolDAO.getSchoolsNearGeoLocation(latitude, longitude, searchRadius, maxNumResults);
+		fixCapitalization(schools);
 		return schools;
 	}
 
 	@Override
-	public List<School> getSchools(double latitude, double longitude, int searchRadius, String searchString) {
+	public List<School> getSchools(double latitude, double longitude, int searchRadius, String searchString,
+			int maxNumResults) {
 		List <School> schools = schoolDAO.getSchoolsNearGeoLocation(latitude, longitude, 
-			searchRadius, searchString);
-		captializeSchoolNames(schools);
+			searchRadius, searchString, maxNumResults);
+		fixCapitalization(schools);
 		return schools;
 	}
 	
-	/* Modifies the letters in each school name to begin with a capitalized letter followed by lower case */
-	private void captializeSchoolNames( List<School> schools ) {
+	@Override
+	public School getSchoolByNcesId(String ncesId) {
+		School school = schoolDAO.getSchoolByNcesId(ncesId);
+		fixCapitalization(school);
+		return school;
+	}
+	
+	/* Modifies the words in each school name, street address and city to begin 
+	 * with a capitalized letter followed by lower case instead of being in all caps
+	 */
+	private void fixCapitalization(List<School> schools ) {
 		for (School s: schools) {
-			s.setName(WordUtils.capitalizeFully(s.getName()));
+			fixCapitalization(s);
 		}
+	}
+	
+	/* Modifies the words in the school's name, street address, city to begin 
+	 * with a capitalized letter followed by lower case instead of being in all caps
+	 */
+	private void fixCapitalization(School s) {
+		char [] delims = {'(', ' '};
+		s.setName(WordUtils.capitalizeFully(s.getName(), delims));
+		s.setCity(WordUtils.capitalizeFully(s.getCity(), delims));
+		s.setStreetAddress(WordUtils.capitalizeFully(s.getStreetAddress(), delims));
 	}
 	
 	

@@ -108,7 +108,7 @@ public class HibernateSchoolDAOTest {
 		// Confirm insert results
 		assertEquals(SCHOOL_NAME, fetchedSchool.getName());
 		assertEquals(SCHOOL_NCES_ID, fetchedSchool.getNcesId());
-		assertEquals(SCHOOL_STR_ADDRESS, fetchedSchool.getStreetAddr());
+		assertEquals(SCHOOL_STR_ADDRESS, fetchedSchool.getStreetAddress());
 		assertEquals(SCHOOL_CITY, fetchedSchool.getCity());
 		assertEquals(SCHOOL_STATE, fetchedSchool.getState());
 		assertEquals(SCHOOL_ZIP, fetchedSchool.getZip());	
@@ -168,7 +168,7 @@ public class HibernateSchoolDAOTest {
 		// Update School Info
 		school.setName(NEW_SCHOOL_NAME);
 		school.setNcesId(NEW_SCHOOL_NCES_ID);
-		school.setStreetAddr(NEW_SCHOOL_STR_ADDRESS);
+		school.setStreetAddress(NEW_SCHOOL_STR_ADDRESS);
 		school.setCity(NEW_SCHOOL_CITY);
 		school.setState(NEW_SCHOOL_STATE);
 		school.setZip(NEW_SCHOOL_ZIP);
@@ -190,7 +190,7 @@ public class HibernateSchoolDAOTest {
 		// verify data was updated
 		assertEquals(NEW_SCHOOL_NAME, fetchedSchool.getName());
 		assertEquals(NEW_SCHOOL_NCES_ID, fetchedSchool.getNcesId());
-		assertEquals(NEW_SCHOOL_STR_ADDRESS, fetchedSchool.getStreetAddr());
+		assertEquals(NEW_SCHOOL_STR_ADDRESS, fetchedSchool.getStreetAddress());
 		assertEquals(NEW_SCHOOL_CITY, fetchedSchool.getCity());
 		assertEquals(NEW_SCHOOL_STATE, fetchedSchool.getState());
 		assertEquals(NEW_SCHOOL_ZIP, fetchedSchool.getZip());	
@@ -343,7 +343,7 @@ public class HibernateSchoolDAOTest {
 		school4.setLongitude( -117.6725555);
 		schoolDAO.insertSchool(school4);
 		
-		List<School> schools = schoolDAO.getSchoolsNearGeoLocation(37.21873,-121.886661, 3);
+		List<School> schools = schoolDAO.getSchoolsNearGeoLocation(37.21873,-121.886661, 3, 100);
 		
 		assertTrue("Was school 1 returned as expected?", schools.contains( school1));
 		assertTrue("Was school 2 returned as expected?", schools.contains(school2));
@@ -351,14 +351,14 @@ public class HibernateSchoolDAOTest {
 		assertFalse("Was school 4 not returned as expected?", schools.contains(school4));
 		
 		// Now limit it with search String 
-		schools = schoolDAO.getSchoolsNearGeoLocation(37.21873,-121.886661, 3, "SIMONDS");
+		schools = schoolDAO.getSchoolsNearGeoLocation(37.21873,-121.886661, 3, "SIMONDS", 100);
 		
 		assertTrue("Was school 1 returned as expected?", schools.contains( school1));
 		assertFalse("Was school 2 not returned as expected?", schools.contains(school2));
 		assertFalse("Was school 3 not returned as expected?", schools.contains(school3));
 		assertFalse("Was school 4 not returned as expected?", schools.contains(school4));
 		
-		schools =  schoolDAO.getSchoolsNearGeoLocation(37.21873,-121.886661, 3, "will");
+		schools =  schoolDAO.getSchoolsNearGeoLocation(37.21873,-121.886661, 3, "will", 100);
 		
 		assertFalse("Was school 1 not returned as expected?", schools.contains( school1));
 		assertTrue("Was school 2 returned as expected?", schools.contains(school2));

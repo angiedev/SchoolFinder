@@ -76,7 +76,7 @@ public class SchoolGeoLocationLoader {
 			 for (School school : schools) {
 				 try {
 					 GeoLocation geoLocation = getGeoLocationForAddress(
-						school.getStreetAddr().replace("'", " "), school.getCity(), school.getState());
+						school.getStreetAddress().replace("'", " "), school.getCity(), school.getState());
 					 school.setLatitude(geoLocation.getLatitude());
 					 school.setLongitude(geoLocation.getLongitude());
 					 schoolDAO.updateSchool(school);
