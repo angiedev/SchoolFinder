@@ -36,4 +36,9 @@ public class Props {
 		return (properties == null) ? null : properties.getProperty("GOOGLE_API_KEY");
 	}
 	
+	public String getLatLongAPIKey() {
+		return (properties == null) ? null : properties.getProperty("LAT_LONG_API_KEY");
+	}
+	
+	
 }

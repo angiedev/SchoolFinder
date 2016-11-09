@@ -38,4 +38,13 @@
  		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
  		<property name="sessionFactory" ref="sessionFactory"/>
  	</bean>
+ 	
+ 	<bean id="loader" class="org.angiedev.schoolfinder.loader.SchoolGeoLocationLoader">
+    	<!-- Select either "latlong" or "google" depending on preference -->
+    	<property name="service" ref="google"/> 
+	</bean>
+
+	<bean id="latLong" class="org.angiedev.schoolfinder.service.impl.LatLongGeoLocationService"/>
+	<bean id="google" class="org.angiedev.schoolfinder.service.impl.GoogleGeoLocationService"/>
+	<bean id="census" class="org.angiedev.schoolfinder.service.impl.CensusGovGeoLocationService"/>
 </beans>

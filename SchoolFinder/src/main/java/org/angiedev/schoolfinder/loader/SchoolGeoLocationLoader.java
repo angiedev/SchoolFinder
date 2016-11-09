@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.angiedev.schoolfinder.dao.SchoolDAO;
-import org.angiedev.schoolfinder.loader.json.GoogleGeocodingLookupResult;
+import org.angiedev.schoolfinder.service.GeoLocationService;
 import org.angiedev.schoolfinder.model.GeoLocation;
 import org.angiedev.schoolfinder.model.School;
 import org.angiedev.schoolfinder.util.Props;
@@ -41,10 +41,8 @@ public class SchoolGeoLocationLoader {
 	 @Autowired
 	 private SchoolDAO schoolDAO;
 	 
-	 private static final String LOOKUP_URL = "https://maps.googleapis.com/maps/api/geocode/json?";
-	 private static final String ADDRESS_KEY_PARAM = "address=";
-	 private static final String API_KEY_PARAM = "key=" + Props.getInstance().getGoogleAPIKey();
-	 
+	 private GeoLocationService service;
+	 	 
 	 /**
 	  * Kicks off the geo location data loader for the schools in the states 
 	  * identified by the passed in argument
@@ -54,11 +52,14 @@ public class SchoolGeoLocationLoader {
 	 public static void main(String[] args) {
 		try (ClassPathXmlApplicationContext context = 
 				new ClassPathXmlApplicationContext("/WEB-INF/SchoolFinderConfig.xml")) {
-			SchoolGeoLocationLoader loader = context.getBean(SchoolGeoLocationLoader.class);
+			SchoolGeoLocationLoader loader = (SchoolGeoLocationLoader)context.getBean("loader");
 			loader.loadGeoLocationData(args[0]);
 		}
 	 }
 	 
+	 public void setService(GeoLocationService service) {
+		 this.service = service;
+	 }
 	 /** 
 	  * Retrieves the schools that need geo location data, looks up the geo-location data and 
 	  * stores the geo-location data into the database.
@@ -66,7 +67,11 @@ public class SchoolGeoLocationLoader {
 	  *  		that geo-location data should be loaded for.
 	  */
 	 public void loadGeoLocationData(String stateCodeList) {
+		 
+		 int numFailures = 0;
+		 int numSuccess = 0;
 		 for (String stateCode: stateCodeList.split(",")) {
+			 System.out.println("Getting geo codes for schools in: " + stateCode);
 			// find addresses that need lat/long data 
 			 List<School> schools = schoolDAO.getSchoolsByStateWithNoGeoData(stateCode);
 			 
@@ -75,47 +80,25 @@ public class SchoolGeoLocationLoader {
 		
 			 for (School school : schools) {
 				 try {
-					 GeoLocation geoLocation = getGeoLocationForAddress(
-						school.getStreetAddress().replace("'", " "), school.getCity(), school.getState());
+					 GeoLocation geoLocation = service.getGeoLocationForAddress(
+						school.getStreetAddress().replace("'", " "), school.getCity(), school.getState(),school.getZip());
 					 school.setLatitude(geoLocation.getLatitude());
 					 school.setLongitude(geoLocation.getLongitude());
 					 schoolDAO.updateSchool(school);
-				 } catch (IOException e) {
-					 System.out.println("Unable to complete load of geo location data.  Exception thrown: " +e);
-					 break;
+					 numSuccess++;
+				 } catch (Exception e) {
+					 System.out.println("Unable to complete load of geo location data for school " + school + "  Exception thrown: " +e);
+					 numFailures++;
+					 continue;
 				 }
 			 }
 		 }
+		 System.out.println("Retrieved Geo location for " + numSuccess + " schools");
+		 System.out.println("Unable to retrieve Geo location for " + numFailures + " schools");
 		 
 	 }
 	 
-	 /**
-	  * Calls the google geo code service to look up the geo location for the passed in address
-	  * @param address 		street address
-	  * @param city 		city	
-	  * @param stateCode 	two letter state code
-	  * @return 			geo location of address
-	  */
-	 private GeoLocation getGeoLocationForAddress(String address, String city, String stateCode)
-	 	throws IOException {
-		
-		String query = LOOKUP_URL + ADDRESS_KEY_PARAM + address + "," + city + "," + 
-				stateCode + "&" + API_KEY_PARAM;
-		
-		RestTemplate restTemplate = new RestTemplate();
-		GoogleGeocodingLookupResult result = 
-				restTemplate.getForObject(query, GoogleGeocodingLookupResult.class);
-		
-		switch (result.getStatus()) {
-			case "OK":
-				return result.getGeoLocation();
-			case "ZERO_RESULTS":
-				return null;
-			default:
-				throw new IOException("Unable to get GeoLocation for address: " + address 
-						+ "," + city + "," + stateCode + ".  GeoCode API returned status: " +
-						result.getStatus());
-		}
-	}
-	
 }
+	 
+	
+
