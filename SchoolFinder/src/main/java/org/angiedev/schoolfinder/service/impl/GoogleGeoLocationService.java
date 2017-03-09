@@ -7,6 +7,7 @@ import org.angiedev.schoolfinder.model.GeoLocation;
 import org.angiedev.schoolfinder.service.GeoLocationService;
 import org.angiedev.schoolfinder.util.Props;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
  *
  */
 @Service
+@Transactional(readOnly=true)
 public class GoogleGeoLocationService implements GeoLocationService {
 
 	 private static final String LOOKUP_URL = "https://maps.googleapis.com/maps/api/geocode/json?";

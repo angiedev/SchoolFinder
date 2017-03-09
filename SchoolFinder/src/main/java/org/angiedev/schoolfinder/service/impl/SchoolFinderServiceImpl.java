@@ -8,6 +8,7 @@ import org.angiedev.schoolfinder.service.SchoolFinderService;
 import org.apache.commons.lang3.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * SchoolFinderServiceImpl is a service which enables a user to search 
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
  * @author Angela Gordon
  */
 @Service
+@Transactional(readOnly = true)
 public class SchoolFinderServiceImpl implements SchoolFinderService {
 
 	@Autowired 

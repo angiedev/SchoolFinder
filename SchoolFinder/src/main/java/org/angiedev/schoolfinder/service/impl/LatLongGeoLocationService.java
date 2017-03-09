@@ -7,6 +7,7 @@ import org.angiedev.schoolfinder.service.GeoLocationService;
 import org.angiedev.schoolfinder.service.impl.json.LatLongGeocodingLookupResult;
 import org.angiedev.schoolfinder.util.Props;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
  *
  */
 @Service
+@Transactional(readOnly=true)
 public class LatLongGeoLocationService implements GeoLocationService {
 	
 	 private static final String LOOKUP_URL = "https://latlon.io/api/v1/geocode?";

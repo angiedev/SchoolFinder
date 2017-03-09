@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans xmlns="http://www.springframework.org/schema/beans" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
   xmlns:tx="http://www.springframework.org/schema/tx"
@@ -16,11 +16,10 @@
   <mvc:annotation-driven /> 
   <context:component-scan base-package="org.angiedev.schoolfinder" />
  
- 
  	<bean id="sessionFactory" 
  		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
  		<property name="dataSource">
- 			<ref bean="schoolfinderDS"/>
+ 			<ref bean="schoolFinderDS"/>
  		</property>
  		<property name="packagesToScan" value="org.angiedev.schoolfinder.model"/>
  		<property name="hibernateProperties">
@@ -33,14 +32,15 @@
  	
  	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
  	
- 	<tx:annotation-driven />
+ 	
  	<bean id="transactionManager" 
  		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
  		<property name="sessionFactory" ref="sessionFactory"/>
  	</bean>
+ 	<tx:annotation-driven transaction-manager="transactionManager"/>
  	
  	<bean id="loader" class="org.angiedev.schoolfinder.loader.SchoolGeoLocationLoader">
-    	<!-- Select either "latlong" or "google" depending on preference -->
+    	<!-- Select either "latlong", "census" or "google" depending on preference -->
     	<property name="service" ref="google"/> 
 	</bean>
 

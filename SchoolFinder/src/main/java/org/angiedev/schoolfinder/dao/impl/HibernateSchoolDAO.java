@@ -6,12 +6,9 @@ import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +19,6 @@ import java.util.List;
  */
 
 @Repository 
-@Transactional
 public class HibernateSchoolDAO implements SchoolDAO {
 
 	private SessionFactory sessionFactory; 
@@ -32,47 +28,37 @@ public class HibernateSchoolDAO implements SchoolDAO {
 		this.sessionFactory = sessionFactory;
 	}
 	
-	private Session currentSession() {
-		Session session;
-		try {
-		    session = sessionFactory.getCurrentSession();
-		} catch (HibernateException e) {
-		    session = sessionFactory.openSession();
-		}
-		return session;
-	}
-	
 	@Override
 	public void insertSchool(School school) {
-		currentSession().save(school);
+		sessionFactory.getCurrentSession().save(school);
 	}
 	
 	@Override 
 	public School getSchool(long schoolId) {
-		return (School)currentSession().get(School.class, schoolId);
+		return (School)sessionFactory.getCurrentSession().get(School.class, schoolId);
 	}
 	
 	@Override
 	public void updateSchool(School school) {
-		currentSession().saveOrUpdate(school);	
+		sessionFactory.getCurrentSession().saveOrUpdate(school);	
 	}
 
 	@Override
 	public void deleteSchool(School school) {
-		currentSession().delete(school);
+		sessionFactory.getCurrentSession().delete(school);
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<School> getSchoolsByDistrictId(long districtId) {	
-		return (List<School>)currentSession().getNamedQuery("School.findByDistrict").
+		return (List<School>)sessionFactory.getCurrentSession().getNamedQuery("School.findByDistrict").
 				setParameter("districtId", districtId, LongType.INSTANCE).getResultList();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public School getSchoolByNcesId(String ncesId) {
-		List<School> schools =  (List<School>)currentSession().getNamedQuery("School.findByNcesId").
+		List<School> schools =  (List<School>)sessionFactory.getCurrentSession().getNamedQuery("School.findByNcesId").
 				setParameter("ncesId", ncesId, StringType.INSTANCE).getResultList();
 			
 		if (schools.size() == 0) {
@@ -86,7 +72,7 @@ public class HibernateSchoolDAO implements SchoolDAO {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<School> getSchoolsByStateWithNoGeoData(String stateCode) {
-		return (List<School>)currentSession().getNamedQuery("School.findByStateWithNoGeoData").
+		return (List<School>)sessionFactory.getCurrentSession().getNamedQuery("School.findByStateWithNoGeoData").
 			setParameter("state", stateCode, StringType.INSTANCE).getResultList();
 	}
 
@@ -106,7 +92,7 @@ public class HibernateSchoolDAO implements SchoolDAO {
 		         " and (:latitude+(:searchRadius/69))"+
 		         " having distance < :searchRadius order by name limit " + maxNumResults; 
 		
-		return currentSession().createNativeQuery(queryStr, School.class).
+		return sessionFactory.getCurrentSession().createNativeQuery(queryStr, School.class).
 			setParameter("longitude", longitude, DoubleType.INSTANCE).
 			setParameter("latitude", latitude, DoubleType.INSTANCE).
 			setParameter("searchRadius", searchRadius, IntegerType.INSTANCE).getResultList();
@@ -129,7 +115,7 @@ public class HibernateSchoolDAO implements SchoolDAO {
 		         " and (:latitude+(:searchRadius/69))"+
 		         " having distance < :searchRadius order by name limit " + maxNumResults; 
 		
-		return currentSession().createNativeQuery(queryStr, School.class).
+		return sessionFactory.getCurrentSession().createNativeQuery(queryStr, School.class).
 				setParameter("longitude", longitude, DoubleType.INSTANCE).
 				setParameter("latitude", latitude, DoubleType.INSTANCE).
 				setParameter("searchRadius", searchRadius, IntegerType.INSTANCE).

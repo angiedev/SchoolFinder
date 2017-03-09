@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:config/SchoolFinderConfig.xml"})
+@ContextConfiguration(locations={"/SchoolFinderConfig.xml"})
 
 public class HibernateDistrictDAOTest {
 	
